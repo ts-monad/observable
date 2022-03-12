@@ -1,20 +1,20 @@
-import { join, lift, pure } from "../Applicative";
+import { zip, lift, pure } from "../Applicative";
 import { mutable, startWith } from "../Observable";
 import { dec, inc } from "./TestHelper";
 
 describe("Applicative", () => {
-  describe("#join", () => {
+  describe("#zip", () => {
     it("should join multiple observables", () => {
       const unobserveX = jest.fn();
       const x = mutable(startWith(1, unobserveX));
       const unobserveY = jest.fn();
       const y = mutable(startWith(5, unobserveY));
 
-      const joined = join({ x, y });
+      const joined = zip({ x, y });
       const cb = jest.fn();
       const ob = joined.observe(cb);
 
-      // Get the joined state
+      // Get zipped joined state
       expect(ob.state).toEqual({ x: 1, y: 5 });
 
       // Notify about changes on each field

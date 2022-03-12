@@ -12,6 +12,6 @@ export type {
 export type { ObservableRecord } from "./Applicative";
 
 export { observable, mutable, startWith } from "./Observable";
-export { fmap, property, propertyOf } from "./Functor";
-export { join, pure, lift } from "./Applicative";
+export { fmap } from "./Functor";
+export { zip, pure, lift } from "./Applicative";
 export { bind } from "./Monad";

@@ -3,7 +3,7 @@ import { Observable, observable, noop, Observation } from "./Observable";
 
 export type ObservableRecord<R> = { [K in keyof R]: Observable<R[K]> };
 
-export const join = <R extends Record<string, any>>(
+export const zip = <R extends Record<string, any>>(
   obr: ObservableRecord<R>
 ): Observable<R> =>
   observable(
@@ -32,4 +32,4 @@ export const pure = <S>(state: S): Observable<S> =>
 export const lift =
   <R, T>(f: (rec: R) => T) =>
   (obr: ObservableRecord<R>) =>
-    fmap(f)(join(obr));
+    fmap(f)(zip(obr));
