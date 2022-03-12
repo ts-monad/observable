@@ -1,12 +1,12 @@
 import { fmap } from "../Functor";
-import { mutable, startWith } from "../Observable";
+import { mutable } from "../Mutable";
 import { inc } from "./TestHelper";
 
 describe("Functor", () => {
   describe("#fmap", () => {
     it("should work correctly as a Functor map", () => {
       const unobserve = jest.fn();
-      const counter = mutable(startWith(0, unobserve));
+      const counter = mutable({ state: 0, unobserve });
       const message = fmap((c: number) => `Current count is ${c}`)(counter);
       const cb = jest.fn();
 

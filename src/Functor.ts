@@ -5,5 +5,5 @@ export const fmap =
   (obSrc: Observable<S>): Observable<T> =>
     observable((update) => {
       const { state, unobserve } = obSrc.observe((src) => update(() => f(src)));
-      return () => ({ state: f(state), unobserve });
+      return { state: f(state), unobserve };
     });

@@ -1,14 +1,14 @@
 import { zip, lift, pure } from "../Applicative";
-import { mutable, startWith } from "../Observable";
+import { mutable } from "../Mutable";
 import { dec, inc } from "./TestHelper";
 
 describe("Applicative", () => {
   describe("#zip", () => {
     it("should join multiple observables", () => {
       const unobserveX = jest.fn();
-      const x = mutable(startWith(1, unobserveX));
+      const x = mutable({ state: 1, unobserve: unobserveX });
       const unobserveY = jest.fn();
-      const y = mutable(startWith(5, unobserveY));
+      const y = mutable({ state: 5, unobserve: unobserveY });
 
       const joined = zip({ x, y });
       const cb = jest.fn();
@@ -36,17 +36,18 @@ describe("Applicative", () => {
   describe("#pure", () => {
     it("should return a constant observable", () => {
       const value = pure(42);
-      const { state } = value.observe(() => {});
-      expect(state).toBe(42);
+      const obn = value.observe(() => {});
+      expect(obn.state).toBe(42);
+      obn.unobserve();
     });
   });
 
   describe("#lift", () => {
     it("should work correctly as an Applicative Functor lift", () => {
       const unobserveX = jest.fn();
-      const x = mutable(startWith(1, unobserveX));
+      const x = mutable({ state: 1, unobserve: unobserveX });
       const unobserveY = jest.fn();
-      const y = mutable(startWith(5, unobserveY));
+      const y = mutable({ state: 5, unobserve: unobserveY });
 
       const prodXY = ({ x, y }: { x: number; y: number }) => x * y;
       const prod = lift(prodXY)({ x, y });

@@ -4,9 +4,19 @@
 [![npm](https://img.shields.io/npm/v/@ts-monad/observable)](https://www.npmjs.com/package/@ts-monad/observable)
 [![Coverage Status](https://coveralls.io/repos/github/ts-monad/observable/badge.svg?branch=master)](https://coveralls.io/github/ts-monad/observable?branch=master)
 
-## How to use
+## How to
 
-_TODO_
+### Create an observable
+
+#### Create a mutable observable
+
+```typescript
+import { mutable, startWith } from "@ts-monad/observable";
+
+const mut = mutable(startWith(0));
+```
+
+#### Create a general observable
 
 ## How to develop
 

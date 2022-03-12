@@ -1,10 +1,10 @@
-import { noop, Observable, observable } from "./Observable";
+import { Observable, observable } from "./Observable";
 
 export const bind =
   <S, T>(f: (src: S) => Observable<T>) =>
   (obSrc: Observable<S>): Observable<T> =>
-    observable((update) => (prevState) => {
-      let unobserveTar = noop;
+    observable((update) => {
+      let unobserveTar = () => {};
       const setSrc = (src: S) => {
         const obnTar = f(src).observe((tar) => update(() => tar));
         unobserveTar();

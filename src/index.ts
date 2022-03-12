@@ -1,17 +1,17 @@
 export type {
-  Handler,
+  Observer,
   Transition,
   Observation,
-  MutableStart,
   Observe,
   Update,
   Observable,
-  Mutable,
-  ObservableStart,
+  ObservableSetup,
 } from "./Observable";
+export type { Mutable } from "./Mutable";
 export type { ObservableRecord } from "./Applicative";
 
-export { observable, mutable, startWith } from "./Observable";
+export { observable } from "./Observable";
+export { mutable } from "./Mutable";
 export { fmap } from "./Functor";
 export { zip, pure, lift } from "./Applicative";
 export { bind } from "./Monad";

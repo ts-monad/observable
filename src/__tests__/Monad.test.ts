@@ -1,5 +1,5 @@
 import { bind } from "../Monad";
-import { mutable, Mutable, startWith } from "../Observable";
+import { mutable, Mutable } from "../Mutable";
 import { add, inc } from "./TestHelper";
 
 describe("Monad", () => {
@@ -7,10 +7,11 @@ describe("Monad", () => {
     it("should work correctly as a Monad Functor bind", () => {
       let mutM: Mutable<number>;
       const unobserveN = jest.fn();
-      const mutN = mutable(startWith(1, unobserveN));
+      const mutN = mutable({ state: 1, unobserve: unobserveN });
       const unobserveM = jest.fn();
       const obM = bind(
-        (n: number) => (mutM = mutable(startWith(n * 10, unobserveM)))
+        (n: number) =>
+          (mutM = mutable({ state: n * 10, unobserve: unobserveM }))
       )(mutN);
 
       const cb = jest.fn();
