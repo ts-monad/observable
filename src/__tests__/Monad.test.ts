@@ -5,43 +5,49 @@ import { add, inc } from "./TestHelper";
 describe("Monad", () => {
   describe("#bind", () => {
     it("should work correctly as a Monad Functor bind", () => {
-      let mutM: Mutable<number>;
-      const unobserveN = jest.fn();
-      const mutN = mutable({ state: 1, unobserve: unobserveN });
-      const unobserveM = jest.fn();
-      const obM = bind(
-        (n: number) =>
-          (mutM = mutable({ state: n * 10, unobserve: unobserveM }))
-      )(mutN);
+      const mutMs: Mutable<number>[] = [];
+      const mutN = mutable(1);
+      const obM = bind((n: number) => {
+        const mutM = mutable(n * 10);
+        mutMs.push(mutM);
+        return mutM;
+      })(mutN);
+
+      // Lazy observation
+      expect(mutN.isObserved()).toBe(false);
+      expect(mutMs.length).toBe(0);
 
       const cb = jest.fn();
       const obn = obM.observe(cb);
       expect(obn.state).toBe(10);
 
       // Inner update
-      mutM.update(inc);
+      expect(mutMs.length).toBe(1);
+      mutMs[0].update(inc);
       expect(cb).toBeCalledTimes(1);
       expect(cb).toHaveBeenLastCalledWith(11);
 
       // Outer update
       mutN.update(inc);
+      expect(mutMs.length).toBe(2);
       expect(cb).toBeCalledTimes(2);
       expect(cb).toHaveBeenLastCalledWith(20);
-      expect(unobserveM).toBeCalledTimes(1);
+      expect(mutMs[0].isObserved()).toBe(false);
 
       // Outer update without value change
-      mutM.update(add(10));
+      mutMs[1].update(add(10));
       expect(cb).toBeCalledTimes(3);
       expect(cb).toHaveBeenLastCalledWith(30);
 
       mutN.update(inc);
+      expect(mutMs.length).toBe(3);
       expect(cb).toBeCalledTimes(3);
-      expect(unobserveM).toBeCalledTimes(2);
+      expect(mutMs[1].isObserved()).toBe(false);
 
       // Cascaded unobserve
       obn.unobserve();
-      expect(unobserveM).toBeCalledTimes(3);
-      expect(unobserveN).toBeCalledTimes(1);
+      expect(mutMs[2].isObserved()).toBe(false);
+      expect(mutN.isObserved()).toBe(false);
     });
   });
 });

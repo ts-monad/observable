@@ -5,14 +5,18 @@ import { dec, inc } from "./TestHelper";
 describe("Applicative", () => {
   describe("#zip", () => {
     it("should join multiple observables", () => {
-      const unobserveX = jest.fn();
-      const x = mutable({ state: 1, unobserve: unobserveX });
-      const unobserveY = jest.fn();
-      const y = mutable({ state: 5, unobserve: unobserveY });
-
+      const x = mutable(1);
+      const y = mutable(5);
       const joined = zip({ x, y });
+
+      // Lazy observation
+      expect(x.isObserved()).toBe(false);
+      expect(y.isObserved()).toBe(false);
+
       const cb = jest.fn();
       const ob = joined.observe(cb);
+      expect(x.isObserved()).toBe(true);
+      expect(y.isObserved()).toBe(true);
 
       // Get zipped joined state
       expect(ob.state).toEqual({ x: 1, y: 5 });
@@ -28,8 +32,8 @@ describe("Applicative", () => {
 
       // Unobserve all joined obervers
       ob.unobserve();
-      expect(unobserveX).toBeCalledTimes(1);
-      expect(unobserveY).toBeCalledTimes(1);
+      expect(x.isObserved()).toBe(false);
+      expect(y.isObserved()).toBe(false);
     });
   });
 
@@ -44,16 +48,20 @@ describe("Applicative", () => {
 
   describe("#lift", () => {
     it("should work correctly as an Applicative Functor lift", () => {
-      const unobserveX = jest.fn();
-      const x = mutable({ state: 1, unobserve: unobserveX });
-      const unobserveY = jest.fn();
-      const y = mutable({ state: 5, unobserve: unobserveY });
+      const x = mutable(1);
+      const y = mutable(5);
 
       const prodXY = ({ x, y }: { x: number; y: number }) => x * y;
       const prod = lift(prodXY)({ x, y });
 
+      // Lazy observation
+      expect(x.isObserved()).toBe(false);
+      expect(y.isObserved()).toBe(false);
+
       const cb = jest.fn();
       const ob = prod.observe(cb);
+      expect(x.isObserved()).toBe(true);
+      expect(y.isObserved()).toBe(true);
 
       // Do the initial calculation
       expect(ob.state).toEqual(5);
@@ -69,8 +77,8 @@ describe("Applicative", () => {
 
       // Unobserve all joined obervers
       ob.unobserve();
-      expect(unobserveX).toBeCalledTimes(1);
-      expect(unobserveY).toBeCalledTimes(1);
+      expect(x.isObserved()).toBe(false);
+      expect(y.isObserved()).toBe(false);
     });
   });
 });

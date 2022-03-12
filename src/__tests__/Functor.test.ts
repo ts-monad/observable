@@ -5,14 +5,17 @@ import { inc } from "./TestHelper";
 describe("Functor", () => {
   describe("#fmap", () => {
     it("should work correctly as a Functor map", () => {
-      const unobserve = jest.fn();
-      const counter = mutable({ state: 0, unobserve });
+      const counter = mutable(0);
       const message = fmap((c: number) => `Current count is ${c}`)(counter);
-      const cb = jest.fn();
+
+      // Lazy observation
+      expect(counter.isObserved()).toBe(false);
 
       // Convert the value correctly
+      const cb = jest.fn();
       const ob1 = message.observe(cb);
       expect(ob1.state).toBe("Current count is 0");
+      expect(counter.isObserved()).toBe(true);
 
       // Multiple observation
       const ob2 = message.observe(cb);
@@ -27,7 +30,7 @@ describe("Functor", () => {
       ob1.unobserve();
       ob1.unobserve();
       ob2.unobserve();
-      expect(unobserve).toBeCalledTimes(1);
+      expect(counter.isObserved()).toBe(false);
     });
   });
 });

@@ -11,9 +11,9 @@
 #### Create a mutable observable
 
 ```typescript
-import { mutable, startWith } from "@ts-monad/observable";
+import { mutable } from "@ts-monad/observable";
 
-const mut = mutable(startWith(0));
+const mut = mutable(0);
 ```
 
 #### Create a general observable
