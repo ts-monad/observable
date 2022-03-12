@@ -1,8 +1,8 @@
 # Observable Monad
 
-[![build status](https://github.com/wewei/ts-monad-observable/actions/workflows/node.js.yml/badge.svg)](https://github.com/wewei/ts-monad-observable/actions/workflows/node.js.yml)
+[![build status](https://github.com/ts-monad/observable/actions/workflows/node.js.yml/badge.svg)](https://github.com/ts-monad/observable/actions/workflows/node.js.yml)
 [![npm](https://img.shields.io/npm/v/@ts-monad/observable)](https://www.npmjs.com/package/@ts-monad/observable)
-[![Coverage Status](https://coveralls.io/repos/github/wewei/ts-monad-observable/badge.svg?branch=master)](https://coveralls.io/github/wewei/ts-monad-observable?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ts-monad/observable/badge.svg?branch=master)](https://coveralls.io/github/ts-monad/observable?branch=master)
 
 ## How to use
 

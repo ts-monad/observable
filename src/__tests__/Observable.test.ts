@@ -1,16 +1,5 @@
-import {
-  bind,
-  fmap,
-  join,
-  lift,
-  Mutable,
-  mutable,
-  property,
-  propertyOf,
-  pure,
-  startWith,
-} from "..";
-import { add, dec, inc } from "./TestHelper";
+import { mutable, startWith } from "..";
+import { add, inc } from "./TestHelper";
 
 describe("Observable & Mutable", () => {
   it("should create an observable object", () => {
