@@ -14,12 +14,12 @@ describe("Functor", () => {
       // Convert the value correctly
       const cb = jest.fn();
       const ob1 = message.observe(cb);
-      expect(ob1.state).toBe("Current count is 0");
+      expect(ob1.value).toBe("Current count is 0");
       expect(counter.isObserved()).toBe(true);
 
       // Multiple observation
       const ob2 = message.observe(cb);
-      expect(ob2.state).toBe("Current count is 0");
+      expect(ob2.value).toBe("Current count is 0");
 
       // Notify on change
       counter.update(inc);

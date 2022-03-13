@@ -1,10 +1,10 @@
 export type {
   Observer,
   Transition,
-  Observation,
   Observe,
   Update,
   Observable,
+  Observation,
   ObservableSetup,
 } from "./Observable";
 export type { Mutable } from "./Mutable";

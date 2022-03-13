@@ -4,7 +4,9 @@
   "description": "Obervable Monad for TypeScript",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "README.zh_CN.md"
   ],
   "scripts": {
     "build": "tsc",

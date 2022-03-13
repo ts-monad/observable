@@ -9,12 +9,12 @@ export const bind =
         const obnTar = f(src).observe((tar) => update(() => tar));
         unobserveTar();
         unobserveTar = obnTar.unobserve;
-        return obnTar.state;
+        return obnTar.value;
       };
       const obnSrc = obSrc.observe((src) => update(() => setSrc(src)));
-      const state = setSrc(obnSrc.state);
+      const value = setSrc(obnSrc.value);
       return {
-        state,
+        value,
         unobserve: () => {
           unobserveTar();
           obnSrc.unobserve();

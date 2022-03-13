@@ -1,31 +1,41 @@
 import { chain } from "./Chain";
 
-export type Observer<S> = (state: S) => void;
-export type Transition<S> = (state: S) => S;
-export type Observation<S> = { state: S; unobserve: () => void };
-export type Observe<S> = (observer: Observer<S>) => Observation<S>;
-export type Update<S> = (transition: Transition<S>) => S;
-export type Observable<S> = { observe: Observe<S>; isObserved(): boolean };
-export type ObservableSetup<S> = (update: Update<S>) => Observation<S>;
+export type Observer<T> = (value: T) => void;
+export type Transition<T> = (value: T) => T;
+export type Observation<T> = { value: T; unobserve: () => void };
+export type Observe<T> = (observer: Observer<T>) => Observation<T>;
+export type Update<T> = (transition: Transition<T>) => T;
+export type Observable<T> = { observe: Observe<T>; isObserved(): boolean };
+export type ObservableSetup<T> = (update: Update<T>) => Observation<T>;
 
-export const observable = <S>(setup: ObservableSetup<S>): Observable<S> => {
-  let obn: Observation<S>;
-  const observers = chain<Observer<S>>();
+export const observable = <T>(setup: ObservableSetup<T>): Observable<T> => {
+  let observation: Observation<T> | null = null;
+  const observers = chain<Observer<T>>();
 
-  const observe: Observe<S> = (observer) => {
-    if (!obn || observers.isEmpty()) {
-      obn = setup((transition) => {
-        const state = transition(obn.state);
-        if (state !== obn.state) {
-          obn.state = state;
-          observers.forEach((cb) => cb(state));
-        }
-        return state;
-      });
-    }
+  const initialize = () => {
+    const update: Update<T> = (transition) => {
+      const value = transition(obn.value);
+      if (value !== obn.value) {
+        obn.value = value;
+        observers.forEach((cb) => cb(value));
+      }
+      return value;
+    };
+    const obn: Observation<T> = (observation = setup(update));
+    return obn;
+  };
+
+  const observe: Observe<T> = (observer) => {
+    const obn = observation ?? initialize();
     const remove = observers.add(observer);
-    const unobserve = () => remove() && observers.isEmpty() && obn.unobserve();
-    return { state: obn.state, unobserve };
+    const unobserve = () => {
+      if (remove() && observers.isEmpty()) {
+        obn.unobserve();
+        observation = null;
+      }
+    };
+
+    return { value: obn.value, unobserve };
   };
   const isObserved = () => !observers.isEmpty();
 

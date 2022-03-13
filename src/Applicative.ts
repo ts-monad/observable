@@ -8,25 +8,25 @@ export const zip = <R extends Record<string, any>>(
 ): Observable<R> =>
   observable((update) =>
     Object.keys(obr).reduce(
-      ({ state, unobserve }, key: keyof R) => {
+      ({ value, unobserve }, key: keyof R) => {
         const ob = obr[key].observe((value) =>
           update((rec) => ({ ...rec, [key]: value }))
         );
-        state[key] = ob.state;
+        value[key] = ob.value;
         return {
-          state,
+          value,
           unobserve: () => {
             ob.unobserve();
             unobserve();
           },
         };
       },
-      { state: {}, unobserve: () => {} } as Observation<R>
+      { value: {}, unobserve: () => {} } as Observation<R>
     )
   );
 
-export const pure = <S>(state: S): Observable<S> =>
-  observable(() => ({ state, unobserve: () => {} }));
+export const pure = <T>(value: T): Observable<T> =>
+  observable(() => ({ value, unobserve: () => {} }));
 
 export const lift =
   <R, T>(f: (rec: R) => T) =>

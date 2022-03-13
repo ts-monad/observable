@@ -12,7 +12,7 @@ describe("Mutable", () => {
     // First observe
     const cb1 = jest.fn();
     const obn1 = mut.observe(cb1);
-    expect(obn1.state).toBe(1);
+    expect(obn1.value).toBe(1);
     expect(mut.isObserved()).toBe(true);
 
     // Notify the change
@@ -27,7 +27,7 @@ describe("Mutable", () => {
     // Second observation
     const cb2 = jest.fn();
     const obn2 = mut.observe(cb2);
-    expect(obn2.state).toBe(2);
+    expect(obn2.value).toBe(2);
     expect(mut.isObserved()).toBe(true);
 
     // Cascaded unobserve

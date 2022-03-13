@@ -4,18 +4,18 @@ import { add, inc } from "./TestHelper";
 describe("Observable & Mutable", () => {
   const unobserve = jest.fn();
   const setup = jest.fn((up: Update<number>) => {
-    update = (transit) => (state = up(transit));
-    return { state, unobserve };
+    update = (transit) => (value = up(transit));
+    return { value, unobserve };
   });
 
-  let state: number;
+  let value: number;
   let update: Update<number>;
   let counter: Observable<number>;
 
   beforeEach(() => {
     unobserve.mockClear();
     setup.mockClear();
-    state = 0;
+    value = 0;
     counter = observable(setup);
   });
 
@@ -27,7 +27,7 @@ describe("Observable & Mutable", () => {
     // Observe
     const cb1 = jest.fn();
     const ob1 = counter.observe(cb1);
-    expect(ob1.state).toBe(0);
+    expect(ob1.value).toBe(0);
     expect(setup).toBeCalled();
     expect(counter.isObserved()).toBe(true);
 
@@ -44,7 +44,7 @@ describe("Observable & Mutable", () => {
     // Re-observe
     const cb2 = jest.fn();
     const ob2 = counter.observe(cb2);
-    expect(ob2.state).toBe(1);
+    expect(ob2.value).toBe(1);
     expect(counter.isObserved()).toBe(true);
 
     update(inc);

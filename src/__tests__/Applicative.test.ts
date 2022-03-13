@@ -18,8 +18,8 @@ describe("Applicative", () => {
       expect(x.isObserved()).toBe(true);
       expect(y.isObserved()).toBe(true);
 
-      // Get zipped joined state
-      expect(ob.state).toEqual({ x: 1, y: 5 });
+      // Get zipped joined value
+      expect(ob.value).toEqual({ x: 1, y: 5 });
 
       // Notify about changes on each field
       x.update(inc);
@@ -41,7 +41,7 @@ describe("Applicative", () => {
     it("should return a constant observable", () => {
       const value = pure(42);
       const obn = value.observe(() => {});
-      expect(obn.state).toBe(42);
+      expect(obn.value).toBe(42);
       obn.unobserve();
     });
   });
@@ -64,7 +64,7 @@ describe("Applicative", () => {
       expect(y.isObserved()).toBe(true);
 
       // Do the initial calculation
-      expect(ob.state).toEqual(5);
+      expect(ob.value).toEqual(5);
 
       // Notify about changes on each field
       x.update(inc);

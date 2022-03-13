@@ -19,7 +19,7 @@ describe("Monad", () => {
 
       const cb = jest.fn();
       const obn = obM.observe(cb);
-      expect(obn.state).toBe(10);
+      expect(obn.value).toBe(10);
 
       // Inner update
       expect(mutMs.length).toBe(1);
