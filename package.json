@@ -11,7 +11,6 @@
     "clean": "rimraf dist coverage",
     "lint": "eslint",
     "prepack": "npm run clean; npm run lint; npm run build; npm run test",
-    "syncdoc": "copyfiles README.md docs",
     "test": "jest"
   },
   "repository": {

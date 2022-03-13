@@ -1,3 +1,5 @@
+[[中文](./README.zh_CN.md)]
+
 # Observable Monad
 
 [![build status](https://github.com/ts-monad/observable/actions/workflows/node.js.yml/badge.svg)](https://github.com/ts-monad/observable/actions/workflows/node.js.yml)
