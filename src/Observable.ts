@@ -1,20 +1,17 @@
 import { chain } from "./Chain";
 
 export type Observer<T> = (value: T) => void;
-export type Transition<T> = (value: T) => T;
 export type Observation<T> = { value: T; unobserve: () => void };
 export type Observe<T> = (observer: Observer<T>) => Observation<T>;
-export type Update<T> = (transition: Transition<T>) => T;
 export type Observable<T> = { observe: Observe<T>; isObserved(): boolean };
-export type ObservableSetup<T> = (update: Update<T>) => Observation<T>;
+export type ObservableSetup<T> = (update: Observer<T>) => Observation<T>;
 
 export const observable = <T>(setup: ObservableSetup<T>): Observable<T> => {
   let observation: Observation<T> | null = null;
   const observers = chain<Observer<T>>();
 
   const initialize = () => {
-    const update: Update<T> = (transition) => {
-      const value = transition(obn.value);
+    const update: Observer<T> = (value) => {
       if (value !== obn.value) {
         obn.value = value;
         observers.forEach((cb) => cb(value));

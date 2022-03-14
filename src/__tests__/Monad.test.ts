@@ -1,53 +1,53 @@
 import { bind } from "../Monad";
-import { mutable, Mutable } from "../Mutable";
+import { store, Store } from "../Store";
 import { add, inc } from "./TestHelper";
 
 describe("Monad", () => {
   describe("#bind", () => {
     it("should work correctly as a Monad Functor bind", () => {
-      const mutMs: Mutable<number>[] = [];
-      const mutN = mutable(1);
+      const stoMs: Store<number>[] = [];
+      const stoN = store(1);
       const obM = bind((n: number) => {
-        const mutM = mutable(n * 10);
-        mutMs.push(mutM);
-        return mutM;
-      })(mutN);
+        const stoM = store(n * 10);
+        stoMs.push(stoM);
+        return stoM;
+      })(stoN);
 
       // Lazy observation
-      expect(mutN.isObserved()).toBe(false);
-      expect(mutMs.length).toBe(0);
+      expect(stoN.isObserved()).toBe(false);
+      expect(stoMs.length).toBe(0);
 
       const cb = jest.fn();
       const obn = obM.observe(cb);
       expect(obn.value).toBe(10);
 
       // Inner update
-      expect(mutMs.length).toBe(1);
-      mutMs[0].update(inc);
+      expect(stoMs.length).toBe(1);
+      inc(stoMs[0]);
       expect(cb).toBeCalledTimes(1);
       expect(cb).toHaveBeenLastCalledWith(11);
 
       // Outer update
-      mutN.update(inc);
-      expect(mutMs.length).toBe(2);
+      inc(stoN);
+      expect(stoMs.length).toBe(2);
       expect(cb).toBeCalledTimes(2);
       expect(cb).toHaveBeenLastCalledWith(20);
-      expect(mutMs[0].isObserved()).toBe(false);
+      expect(stoMs[0].isObserved()).toBe(false);
 
       // Outer update without value change
-      mutMs[1].update(add(10));
+      add(10)(stoMs[1]);
       expect(cb).toBeCalledTimes(3);
       expect(cb).toHaveBeenLastCalledWith(30);
 
-      mutN.update(inc);
-      expect(mutMs.length).toBe(3);
+      inc(stoN);
+      expect(stoMs.length).toBe(3);
       expect(cb).toBeCalledTimes(3);
-      expect(mutMs[1].isObserved()).toBe(false);
+      expect(stoMs[1].isObserved()).toBe(false);
 
       // Cascaded unobserve
       obn.unobserve();
-      expect(mutMs[2].isObserved()).toBe(false);
-      expect(mutN.isObserved()).toBe(false);
+      expect(stoMs[2].isObserved()).toBe(false);
+      expect(stoN.isObserved()).toBe(false);
     });
   });
 });

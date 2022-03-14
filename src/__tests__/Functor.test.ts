@@ -1,11 +1,11 @@
 import { fmap } from "../Functor";
-import { mutable } from "../Mutable";
+import { store } from "../Store";
 import { inc } from "./TestHelper";
 
 describe("Functor", () => {
   describe("#fmap", () => {
     it("should work correctly as a Functor map", () => {
-      const counter = mutable(0);
+      const counter = store(0);
       const message = fmap((c: number) => `Current count is ${c}`)(counter);
 
       // Lazy observation
@@ -22,7 +22,7 @@ describe("Functor", () => {
       expect(ob2.value).toBe("Current count is 0");
 
       // Notify on change
-      counter.update(inc);
+      inc(counter);
       expect(cb).toBeCalledTimes(2);
       expect(cb).toBeCalledWith("Current count is 1");
 

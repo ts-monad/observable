@@ -1,12 +1,12 @@
 import { zip, lift, pure } from "../Applicative";
-import { mutable } from "../Mutable";
+import { store } from "../Store";
 import { dec, inc } from "./TestHelper";
 
 describe("Applicative", () => {
   describe("#zip", () => {
     it("should join multiple observables", () => {
-      const x = mutable(1);
-      const y = mutable(5);
+      const x = store(1);
+      const y = store(5);
       const joined = zip({ x, y });
 
       // Lazy observation
@@ -22,11 +22,11 @@ describe("Applicative", () => {
       expect(ob.value).toEqual({ x: 1, y: 5 });
 
       // Notify about changes on each field
-      x.update(inc);
+      inc(x);
       expect(cb).toBeCalledTimes(1);
       expect(cb).toBeCalledWith({ x: 2, y: 5 });
 
-      y.update(dec);
+      dec(y);
       expect(cb).toBeCalledTimes(2);
       expect(cb).toBeCalledWith({ x: 2, y: 4 });
 
@@ -48,8 +48,8 @@ describe("Applicative", () => {
 
   describe("#lift", () => {
     it("should work correctly as an Applicative Functor lift", () => {
-      const x = mutable(1);
-      const y = mutable(5);
+      const x = store(1);
+      const y = store(5);
 
       const prodXY = ({ x, y }: { x: number; y: number }) => x * y;
       const prod = lift(prodXY)({ x, y });
@@ -67,11 +67,11 @@ describe("Applicative", () => {
       expect(ob.value).toEqual(5);
 
       // Notify about changes on each field
-      x.update(inc);
+      inc(x);
       expect(cb).toBeCalledTimes(1);
       expect(cb).toBeCalledWith(10);
 
-      y.update(dec);
+      dec(y);
       expect(cb).toBeCalledTimes(2);
       expect(cb).toBeCalledWith(8);
 

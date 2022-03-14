@@ -1,17 +1,18 @@
-import { Observable, observable, Update } from "../Observable";
-import { add, inc } from "./TestHelper";
+import { Observable, observable, Observer } from "../Observable";
 
-describe("Observable & Mutable", () => {
+describe("Observable", () => {
   const unobserve = jest.fn();
-  const setup = jest.fn((up: Update<number>) => {
-    update = (transit) => (value = up(transit));
+  const setup = jest.fn((up: Observer<number>) => {
+    update = (val) => {
+      value = val;
+      up(val);
+    };
     return { value, unobserve };
   });
 
   let value: number;
-  let update: Update<number>;
+  let update: Observer<number>;
   let counter: Observable<number>;
-
   beforeEach(() => {
     unobserve.mockClear();
     setup.mockClear();
@@ -32,7 +33,7 @@ describe("Observable & Mutable", () => {
     expect(counter.isObserved()).toBe(true);
 
     // Notify the changes
-    update(inc);
+    update(1);
     expect(cb1).toBeCalledTimes(1);
     expect(cb1).toBeCalledWith(1);
 
@@ -47,13 +48,13 @@ describe("Observable & Mutable", () => {
     expect(ob2.value).toBe(1);
     expect(counter.isObserved()).toBe(true);
 
-    update(inc);
+    update(2);
     expect(cb1).toBeCalledTimes(1);
     expect(cb2).toBeCalledTimes(1);
     expect(cb2).toBeCalledWith(2);
 
     // No notification when update without change
-    update(add(0));
+    update(2);
     expect(cb2).toBeCalledTimes(1);
 
     // Cascaded unobserve
@@ -68,7 +69,7 @@ describe("Observable & Mutable", () => {
     const ob2 = counter.observe(cb);
 
     // Notify the changes
-    update(inc);
+    update(1);
     expect(cb).toBeCalledTimes(2);
     expect(cb).toBeCalledWith(1);
 
