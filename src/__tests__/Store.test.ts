@@ -1,9 +1,9 @@
-import { store } from "../Store";
+import { mutable } from "../Store";
 import { inc } from "./TestHelper";
 
 describe("Store", () => {
   it("should create a store object", () => {
-    const sto = store(0);
+    const sto = mutable(0);
 
     // Update without observers
     expect(inc(sto)).toBe(1);

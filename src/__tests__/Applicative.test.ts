@@ -1,12 +1,12 @@
 import { zip, lift, pure } from "../Applicative";
-import { store } from "../Store";
+import { mutable } from "../Store";
 import { dec, inc } from "./TestHelper";
 
 describe("Applicative", () => {
   describe("#zip", () => {
     it("should join multiple observables", () => {
-      const x = store(1);
-      const y = store(5);
+      const x = mutable(1);
+      const y = mutable(5);
       const joined = zip({ x, y });
 
       // Lazy observation
@@ -48,8 +48,8 @@ describe("Applicative", () => {
 
   describe("#lift", () => {
     it("should work correctly as an Applicative Functor lift", () => {
-      const x = store(1);
-      const y = store(5);
+      const x = mutable(1);
+      const y = mutable(5);
 
       const prodXY = ({ x, y }: { x: number; y: number }) => x * y;
       const prod = lift(prodXY)({ x, y });

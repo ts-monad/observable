@@ -1,11 +1,11 @@
 import { fmap } from "../Functor";
-import { store } from "../Store";
+import { mutable } from "../Store";
 import { inc } from "./TestHelper";
 
 describe("Functor", () => {
   describe("#fmap", () => {
     it("should work correctly as a Functor map", () => {
-      const counter = store(0);
+      const counter = mutable(0);
       const message = fmap((c: number) => `Current count is ${c}`)(counter);
 
       // Lazy observation

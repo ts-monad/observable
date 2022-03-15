@@ -1,14 +1,14 @@
 import { bind } from "../Monad";
-import { store, Store } from "../Store";
+import { mutable, MutableStore } from "../Store";
 import { add, inc } from "./TestHelper";
 
 describe("Monad", () => {
   describe("#bind", () => {
     it("should work correctly as a Monad Functor bind", () => {
-      const stoMs: Store<number>[] = [];
-      const stoN = store(1);
+      const stoMs: MutableStore<number>[] = [];
+      const stoN = mutable(1);
       const obM = bind((n: number) => {
-        const stoM = store(n * 10);
+        const stoM = mutable(n * 10);
         stoMs.push(stoM);
         return stoM;
       })(stoN);
