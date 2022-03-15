@@ -29,7 +29,7 @@
 > const fmap =
 >   <S, T>(f: (s: S) => T) =>
 >   (arr: S[]): T[] =>
->     arr.map((x) => f(x));
+>     arr.map(x => f(x));
 > ```
 
 ### `Applicative` 与 `lift` 高阶函数
@@ -71,7 +71,7 @@ const watchingStockSymbol: Mutable<string> = mutable("MSFT");
 > const bind =
 >   <S, T>(f: (s: S) => T[]) =>
 >   (arrS: S[]): T[] =>
->     [].concat(...arrS.map((s) => f(s)));
+>     [].concat(...arrS.map(s => f(s)));
 > ```
 
 ### Observable 作为 Monad 的意义
@@ -95,13 +95,17 @@ const html = lift(render)({
 
 ```typescript
 const divStockInfo = document.getElementById("stock-info");
-const { value } = html.observe((newHtml) => {
+const { value } = html.observe(newHtml => {
   divStockInfo.innerHTML = newHtml;
 });
 divStockInfo.innerHTML = value;
 ```
 
 ## API
+
+### 类型 `Observable<T>`
+
+### 类型 `Store<T>`
 
 ### `Observable<T>#observe(observer: (value: T) => void): { value: T, unobserve: () => void }`
 
@@ -132,8 +136,8 @@ divStockInfo.innerHTML = value;
 示例，创建一个初始为 0 每 10 秒自加 1 的计数器。
 
 ```typescript
-const counter = observable((update) => {
-  const interval = setInterval(() => update((i) => i + 1), 10000);
+const counter = observable(update => {
+  const interval = setInterval(() => update(i => i + 1), 10000);
   return { value: 0, unobserve: () => clearInterval(interval) };
 });
 ```
@@ -150,11 +154,11 @@ const counter = observable((update) => {
 
 ```typescript
 const timestamp = Date.now();
-const counter = observable((update) => {
+const counter = observable(update => {
   const now = Date.now();
   const value = Math.floor((now - timestamp) / 10);
   const callback = () => {
-    update((i) => i + 1);
+    update(i => i + 1);
     timeout = setTimeout(callback, 10000);
   };
   let timeout = setTimeout(callback, (value + 1) * 10000 - now);

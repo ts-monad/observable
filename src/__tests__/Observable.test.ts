@@ -3,7 +3,7 @@ import { Observable, observable, Observer } from "../Observable";
 describe("Observable", () => {
   const unobserve = jest.fn();
   const setup = jest.fn((up: Observer<number>) => {
-    update = (val) => {
+    update = val => {
       value = val;
       up(val);
     };

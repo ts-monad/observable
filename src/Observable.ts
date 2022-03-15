@@ -11,10 +11,10 @@ export const observable = <T>(setup: ObservableSetup<T>): Observable<T> => {
   const observers = chain<Observer<T>>();
 
   const initialize = () => {
-    const update: Observer<T> = (value) => {
+    const update: Observer<T> = value => {
       if (value !== obn.value) {
         obn.value = value;
-        observers.forEach((cb) => cb(value));
+        observers.forEach(cb => cb(value));
       }
       return value;
     };
@@ -22,7 +22,7 @@ export const observable = <T>(setup: ObservableSetup<T>): Observable<T> => {
     return obn;
   };
 
-  const observe: Observe<T> = (observer) => {
+  const observe: Observe<T> = observer => {
     const obn = observation ?? initialize();
     const remove = observers.add(observer);
     const unobserve = () => {

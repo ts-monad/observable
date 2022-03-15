@@ -30,7 +30,7 @@ A type mapping with a `fmap` HOF is called a `Functor`. Apparently, `Observable`
 > const fmap =
 >   <S, T>(f: (s: S) => T) =>
 >   (arr: S[]): T[] =>
->     arr.map((x) => f(x));
+>     arr.map(x => f(x));
 > ```
 
 ### `Applicative` and the `lift` HOF
@@ -73,7 +73,7 @@ We need an HOF typed `<S, T>(f: (s: S) => Observable<T>) => (obS: Observable<S>)
 > const bind =
 >   <S, T>(f: (s: S) => T[]) =>
 >   (arrS: S[]): T[] =>
->     [].concat(...arrS.map((s) => f(s)));
+>     [].concat(...arrS.map(s => f(s)));
 > ```
 
 ### How Monad helps
@@ -97,7 +97,7 @@ Next step, we can mount the HTML into the Web Page, and keep it up to date
 
 ```typescript
 const divStockInfo = document.getElementById("stock-info");
-const { value } = html.observe((newHtml) => {
+const { value } = html.observe(newHtml => {
   divStockInfo.innerHTML = newHtml;
 });
 divStockInfo.innerHTML = value;
@@ -134,8 +134,8 @@ Create an `Observable` object with value type `T`.
 Example, a counter count by 1 every 10 seconds, start from 0.
 
 ```typescript
-const counter = observable((update) => {
-  const interval = setInterval(() => update((i) => i + 1), 10000);
+const counter = observable(update => {
+  const interval = setInterval(() => update(i => i + 1), 10000);
   return { value: 0, unobserve: () => clearInterval(interval) };
 });
 ```
@@ -156,11 +156,11 @@ The `counter` in the above example is a "lazy counter". It pauses when there's n
 
 ```typescript
 const timestamp = Date.now();
-const counter = observable((update) => {
+const counter = observable(update => {
   const now = Date.now();
   const value = Math.floor((now - timestamp) / 10);
   const callback = () => {
-    update((i) => i + 1);
+    update(i => i + 1);
     timeout = setTimeout(callback, 10000);
   };
   let timeout = setTimeout(callback, (value + 1) * 10000 - now);
